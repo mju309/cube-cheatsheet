@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>2-Look OLL + PLL 통합 치트시트</title>
+
+  <script src="https://cdn.cubing.net/v0/js/cubing/twisty" type="module"></script>
+
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#141b2d;
+      --panel2:#1a2338;
+      --line:#28344f;
+      --text:#f7f8fb;
+      --muted:#aab4c8;
+      --accent:#ffd43b;
+      --accent2:#7dd3fc;
+      --green:#7ee787;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;
+      color:var(--text);
+      background:radial-gradient(circle at top, #1b2848 0, var(--bg) 40rem);
+      min-height:100vh;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(11,16,32,.88);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);
+    }
+
+    .header-inner{
+      max-width:1100px;
+      margin:auto;
+      padding:14px 16px 12px;
+    }
+
+    h1{
+      margin:0 0 4px;
+      font-size:1.45rem;
+      line-height:1.2;
+    }
+
+    .subtitle{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.45;
+    }
+
+    nav{
+      display:flex;
+      gap:8px;
+      overflow-x:auto;
+      padding-top:11px;
+      scrollbar-width:none;
+    }
+
+    nav::-webkit-scrollbar{display:none}
+    nav a{
+      flex:0 0 auto;
+      text-decoration:none;
+      color:var(--text);
+      border:1px solid var(--line);
+      background:var(--panel2);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:.84rem;
+      white-space:nowrap;
+    }
+
+    main{
+      max-width:1100px;
+      margin:auto;
+      padding:18px 14px 54px;
+    }
+
+    .notice-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+      margin-bottom:26px;
+    }
+
+    .notice{
+      border:1px solid #45536f;
+      background:rgba(26,35,56,.78);
+      border-radius:16px;
+      padding:13px 15px;
+      color:#dbe2ee;
+      font-size:.9rem;
+      line-height:1.6;
+    }
+
+    .notice b{color:var(--accent)}
+
+    .big-section{
+      margin:34px 0 42px;
+      scroll-margin-top:120px;
+    }
+
+    .section-chip{
+      display:inline-block;
+      padding:5px 10px;
+      border-radius:999px;
+      font-size:.76rem;
+      font-weight:800;
+      margin-bottom:8px;
+      color:#0b1020;
+      background:var(--accent);
+    }
+
+    .section-chip.pll{
+      background:var(--accent2);
+    }
+
+    .section-title{
+      margin:0 0 6px;
+      font-size:1.45rem;
+      line-height:1.2;
+    }
+
+    .section-desc{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.55;
+    }
+
+    .subhead{
+      margin:22px 0 10px;
+      font-size:1.05rem;
+      color:#fff;
+      scroll-margin-top:120px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, var(--panel) 0%, #101728 100%);
+      border:1px solid var(--line);
+      border-radius:20px;
+      overflow:hidden;
+      min-width:0;
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+    }
+
+    .card-head{
+      padding:14px 15px 7px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    .case-name{
+      font-weight:800;
+      font-size:1.05rem;
+    }
+
+    .hint{
+      color:var(--muted);
+      font-size:.8rem;
+      margin-top:4px;
+      line-height:1.45;
+    }
+
+    .badge{
+      flex:0 0 auto;
+      color:#0b1020;
+      background:var(--accent);
+      border-radius:999px;
+      font-size:.72rem;
+      padding:4px 8px;
+      font-weight:800;
+    }
+
+    .badge.pll{ background:var(--accent2); }
+
+    twisty-player{
+      display:block;
+      width:100%;
+      height:275px;
+      --twisty-player-background:transparent;
+    }
+
+    .alg-wrap{
+      padding:7px 14px 15px;
+    }
+
+    .alg-label{
+      color:var(--muted);
+      font-size:.73rem;
+      margin-bottom:5px;
+    }
+
+    .alg{
+      width:100%;
+      border:1px solid var(--line);
+      background:#0c1322;
+      color:#fff;
+      border-radius:12px;
+      padding:10px 12px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.88rem;
+      line-height:1.5;
+      word-break:break-word;
+      cursor:pointer;
+      text-align:left;
+    }
+
+    .alg:active{transform:scale(.99)}
+    .copied{
+      color:var(--green);
+      font-size:.75rem;
+      margin-top:5px;
+      min-height:1em;
+    }
+
+    .step{
+      display:inline-block;
+      margin-top:6px;
+      color:#dbe2ee;
+      font-size:.76rem;
+      background:#0f1a31;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:4px 8px;
+    }
+
+    footer{
+      max-width:1100px;
+      margin:auto;
+      padding:0 16px 28px;
+      color:var(--muted);
+      font-size:.8rem;
+      line-height:1.55;
+    }
+
+    @media (max-width: 780px){
+      .notice-grid,.grid{grid-template-columns:1fr}
+      twisty-player{height:300px}
+      .card{border-radius:17px}
+    }
+
+    @media (max-width: 420px){
+      main{padding-left:11px;padding-right:11px}
+      .header-inner{padding-left:13px;padding-right:13px}
+      h1{font-size:1.28rem}
+      twisty-player{height:280px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>🧩 2-Look OLL + PLL 통합 치트시트</h1>
+      <div class="subtitle">
+        노란색 위 / 초록색 앞 / 흰색 아래 기준 · 큐브를 드래그해서 돌려보고 ▶로 공식을 재생
+      </div>
+      <nav>
+        <a href="#oll">OLL 전체</a>
+        <a href="#oll-edges">OLL 1단계: 십자가</a>
+        <a href="#oll-corners">OLL 2단계: 코너</a>
+        <a href="#pll">PLL 전체</a>
+        <a href="#pll-corners">PLL 1단계: 코너</a>
+        <a href="#pll-edges">PLL 2단계: 엣지</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="notice-grid">
+      <div class="notice">
+        <b>사용법</b><br>
+        모든 케이스는 <b>노란색 위 / 초록색 앞 / 흰색 아래</b> 기준으로 시작함.
+        각 3D 큐브는 그 공식이 필요한 실제 색 상태에서 시작하고,
+        재생하면 공식 수행 과정을 그대로 볼 수 있음.
+      </div>
+      <div class="notice">
+        <b>추천 순서</b><br>
+        OLL은 <b>십자가 → 코너</b> 순서, PLL은 <b>코너 → AUF → 엣지</b> 순서로 보면 됨.
+        공식 박스를 누르면 복사됨.
+      </div>
+    </div>
+
+    <section id="oll" class="big-section">
+      <div class="section-chip">OLL</div>
+      <h2 class="section-title">2-Look OLL</h2>
+      <p class="section-desc">
+        마지막 층의 <b>방향(orientation)</b>을 맞추는 단계.
+        먼저 노란 십자가를 만들고, 그 다음 노란 코너 방향을 맞추면 됨.
+      </p>
+
+      <h3 id="oll-edges" class="subhead">① 노란 십자가 만들기</h3>
+      <div class="grid">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">Dot · 점</div>
+              <div class="hint">노란 엣지가 위를 보는 게 하나도 없을 때</div>
+              <div class="step">OLL 1단계</div>
+            </div>
+            <span class="badge">Edges</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 f U R U' R' f' F U R U' R' F'" alg="F R U R' U' F' f R U R' U' f'" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">F (R U R' U') F'  f (R U R' U') f'</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">L Shape · ㄴ자</div>
+              <div class="hint">노란 엣지 2개가 붙어 있는 상태</div>
+              <div class="step">OLL 1단계</div>
+            </div>
+            <span class="badge">Edges</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 f U R U' R' f'" alg="f R U R' U' f'" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">f (R U R' U') f'</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">Line · 일자</div>
+              <div class="hint">노란 엣지 2개가 일자로 마주볼 때</div>
+              <div class="step">OLL 1단계</div>
+            </div>
+            <span class="badge">Edges</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 F U R U' R' F'" alg="F R U R' U' F'" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">F (R U R' U') F'</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+      </div>
+
+      <h3 id="oll-corners" class="subhead">② 노란 코너 방향 맞추기</h3>
+      <div class="notice" style="margin-bottom:12px"><b>기준 자세:</b> 노란색 위, 초록색 앞. L/T의 첫 <b>x</b>는 여기서 R 방향으로 큐브 전체를 돌려 <b>흰색을 앞면</b>으로 가져오는 동작임.</div>
+      <div class="grid">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">H</div>
+              <div class="hint">노란 코너가 위를 보는 게 0개</div>
+              <div class="step">OLL 2단계</div>
+            </div>
+            <span class="badge">0 Corner</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 F U R U' R' U R U' R' U R U' R' F'" alg="F R U R' U' R U R' U' R U R' U' F'" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">F (R U R' U')3 F'</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">Pi · π</div>
+              <div class="hint">노란 코너가 위를 보는 게 0개</div>
+              <div class="step">OLL 2단계</div>
+            </div>
+            <span class="badge">0 Corner</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 R' U2 R2 U R2 U R2 U2 R'" alg="R U2 R2 U' R2 U' R2 U2 R" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">R U2 (R2 U' R2 U' R2) U2 R</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">Sune · 물고기</div>
+              <div class="hint">노란 코너가 위를 보는 게 1개</div>
+              <div class="step">OLL 2단계</div>
+            </div>
+            <span class="badge">1 Corner</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 R U2 R' U' R U' R'" alg="R U R' U R U2 R'" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">R U R' U R U2 R'</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">Anti-Sune · 역물고기</div>
+              <div class="hint">Sune의 반대 방향 버전</div>
+              <div class="step">OLL 2단계</div>
+            </div>
+            <span class="badge">1 Corner</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 L' U2 L U L' U L" alg="L' U' L U' L' U2 L" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">L' U' L U' L' U2 L</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">L</div>
+              <div class="hint">두 노란 코너가 L 모양처럼 보이는 경우</div>
+              <div class="step">OLL 2단계</div>
+            </div>
+            <span class="badge">2 Corner</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 x D' R' U R D R' U' R x'" alg="x R' U R D' R' U' R D" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식 · x = R 방향 전체회전 (노랑 위에서 시작 → 흰색이 앞면)</div>
+            <button class="alg">x (R' U R D') (R' U' R D)</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">T</div>
+              <div class="hint">두 노란 코너가 T 형태처럼 보이는 경우</div>
+              <div class="step">OLL 2단계</div>
+            </div>
+            <span class="badge">2 Corner</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 x U R' U' L U R U' L' x'" alg="x L U R' U' L' U R U'" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식 · x = R 방향 전체회전 (노랑 위에서 시작 → 흰색이 앞면)</div>
+            <button class="alg">x (L U R' U') (L' U R U')</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">U · 헤드라이트</div>
+              <div class="hint">한쪽에 헤드라이트가 보이는 케이스</div>
+              <div class="step">OLL 2단계</div>
+            </div>
+            <span class="badge">2 Corner</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 R U2 R D R' U2 R D' R2" alg="R2 D R' U2 R D' R' U2 R'" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">R2 D R' U2 R D' R' U2 R'</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="pll" class="big-section">
+      <div class="section-chip pll">PLL</div>
+      <h2 class="section-title">2-Look PLL</h2>
+      <p class="section-desc">
+        마지막 층의 <b>위치(permutation)</b>를 맞추는 단계.
+        먼저 코너를 제자리로 보내고, <b>AUF</b>(U / U' / U2 정렬) 후 엣지를 정리하면 끝.
+      </p>
+
+      <h3 id="pll-corners" class="subhead">① 코너 맞추기</h3>
+      <div class="grid">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">Adjacent Corner Swap · 헤드라이트 있음</div>
+              <div class="hint">헤드라이트를 왼쪽에 두고 수행</div>
+              <div class="step">PLL 1단계</div>
+            </div>
+            <span class="badge pll">Corners</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 F R U' R' U R U R2 F' R U R U' R'" alg="R U R' U' R' F R2 U' R' U' R U R' F'" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">R U R' U' R' F R2 U' R' U' R U R' F'</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">Diagonal Corner Swap · 헤드라이트 없음</div>
+              <div class="hint">어느 면에도 헤드라이트가 없을 때</div>
+              <div class="step">PLL 1단계</div>
+            </div>
+            <span class="badge pll">Corners</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 F R' F' R U R U' R' F R U' R' U R U R' F'" alg="F R U' R' U' R U R' F' R U R' U' R' F R F'" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">F R U' R' U' R U R' F' R U R' U' R' F R F'</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+      </div>
+
+      <h3 id="pll-edges" class="subhead">② 엣지 맞추기</h3>
+      <div class="grid">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">Ua</div>
+              <div class="hint">완성된 바를 뒤에 두고, 앞 엣지가 오른쪽으로 가야 할 때</div>
+              <div class="step">PLL 2단계</div>
+            </div>
+            <span class="badge pll">Edges</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 R2 U R U R' U' R' U' R' U R'" alg="R U' R U R U R U' R' U' R2" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">R U' R U R U R U' R' U' R2</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">Ub</div>
+              <div class="hint">완성된 바를 뒤에 두고, 앞 엣지가 왼쪽으로 가야 할 때</div>
+              <div class="step">PLL 2단계</div>
+            </div>
+            <span class="badge pll">Edges</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 R U' R U R U R U' R' U' R2" alg="R2 U R U R' U' R' U' R' U R'" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식</div>
+            <button class="alg">R2 U R U R' U' R' U' R' U R'</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">H</div>
+              <div class="hint">완성된 바가 없고, 마주 보는 엣지끼리 교환</div>
+              <div class="step">PLL 2단계</div>
+            </div>
+            <span class="badge pll">Edges</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 M2 U M2 U2 M2 U M2" alg="M2 U' M2 U2 M2 U' M2" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식 · M은 L방향, M'은 R방향</div>
+            <button class="alg">M2 U' M2 U2 M2 U' M2</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="case-name">Z</div>
+              <div class="hint">완성된 바가 없고, 인접한 엣지끼리 교환</div>
+              <div class="step">PLL 2단계</div>
+            </div>
+            <span class="badge pll">Edges</span>
+          </div>
+          <twisty-player puzzle="3x3x3" experimental-setup-alg="z2 M2 U2 M U M2 U M2 U M" alg="M' U' M2 U' M2 U' M' U2 M2" background="none" viewer-link="none" tempo-scale="1.1"></twisty-player>
+          <div class="alg-wrap">
+            <div class="alg-label">공식 · M은 L방향, M'은 R방향</div>
+            <button class="alg">M' U' M2 U' M2 U' M' U2 M2</button>
+            <div class="copied"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    2-Look OLL 10개 + 2-Look PLL 6개 통합판. 인터넷 연결이 있어야 처음 로딩 시 cubing.js 모듈을 불러올 수 있음.
+  </footer>
+
+  <script>
+    document.querySelectorAll('.alg').forEach(button => {
+      button.addEventListener('click', async () => {
+        const text = button.textContent.trim();
+        const msg = button.parentElement.querySelector('.copied');
+        try{
+          await navigator.clipboard.writeText(text);
+          msg.textContent = '✓ 공식 복사됨';
+        }catch(e){
+          msg.textContent = '공식: ' + text;
+        }
+        setTimeout(() => { msg.textContent = ''; }, 1200);
+      });
+    });
+  </script>
+</body>
+</html>
